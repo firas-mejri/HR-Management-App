@@ -1,0 +1,41 @@
+<form class="form-signin text-center" (ngSubmit)="onSubmit()" #Form="ngForm">
+
+    <div *ngIf="userType == 'admin'">
+      <img class="mb-4" src="../../assets/HR.png" alt="" width="72" height="72">
+    </div>
+    <div *ngIf="userType == 'employee'">
+      <img class="mb-4" src="../../assets/employee.png" alt="" width="72" height="72">
+    </div>
+
+    <h1 class="h3 mb-3 font-weight-normal">
+      Veuillez vous connecter
+    </h1>
+  
+    <label for="inputLogin" class="sr-only">
+      Nom d'Utilisateur
+    </label>
+    <input type="text" id="inputLogin" class="form-control" placeholder="Nom d'Utilisateur"
+    [(ngModel)]="loginInfos.login" name="login" #inputLogin="ngModel" [ngModelOptions]="{ updateOn: 'submit' }">
+    
+    <label for="inputPassword" class="sr-only">
+      Mot de Passe
+    </label>
+  
+    <input type="password" id="inputPassword" class="form-control" placeholder="Mot de Passe"
+    [(ngModel)]="loginInfos.password" name="password" [ngModelOptions]="{ updateOn: 'submit' }">
+    
+    <div class="checkbox mb-3"></div>
+    
+    <div *ngIf="userType == 'admin'">
+      <button class="btn btn-lg btn-danger btn-block" type="submit">Se Connecter</button>
+    </div>
+
+    <div *ngIf="userType == 'employee'">
+        <button class="btn btn-lg btn-primary btn-block" type="submit" (click)="onSubmit()">Se Connecter</button>
+    </div>
+    <button class="btn-primary-outline mt-3" routerLink="/base">retour</button>
+  </form>
+
+  <div class="error mt-3">{{ loginError }}</div>
+
+<p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2018</p>
