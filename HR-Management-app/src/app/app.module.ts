@@ -1,15 +1,32 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 import { AppComponent } from './app.component';
 import { BasePageComponent } from './base-page/base-page.component';
 import { LoginComponent } from './login/login.component';
-import { AppRoutingModule } from './/app-routing.module';
+import { RouterModule } from '@angular/router';
 import { LoginService } from './login.service';
 import { ManagementSpaceComponent } from './management-space/management-space.component';
+import { AuthService } from './auth.service';
+import { CanActivateViaAuthGuard } from './can-activate-via-auth.guard';
+import { AuthInterceptorService } from './auth-interceptor.service';
 
+
+const routes = [
+  { path: 'login', component: LoginComponent },
+  {
+    path: 'admin',
+    component: ManagementSpaceComponent,
+    canActivate: [
+        CanActivateViaAuthGuard
+    ]
+},
+{ path: '', component: BasePageComponent },
+{ path: '**', redirectTo: '' }
+];
 
 @NgModule({
   declarations: [
@@ -20,11 +37,19 @@ import { ManagementSpaceComponent } from './management-space/management-space.co
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    FormsModule
+    RouterModule.forRoot(routes),
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [
-    LoginService
+    AuthService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptorService,
+            multi: true
+        },
+        CanActivateViaAuthGuard
   ],
   bootstrap: [AppComponent]
 })
